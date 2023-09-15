@@ -14,6 +14,8 @@
   --dark: #0e0e12;
   --green: #52d794;
   --blue: #00b3bd;
+  --pink: #d716e9;
+  --read: #ee1493;
   --light: #fff;
   --red: indianred;
 }
@@ -33,7 +35,7 @@ body {
 
 html {
   font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(to right, var(--green) 0%, var(--blue) 100%);
+  background: linear-gradient(to right, var(--pink) 0%, var(--read) 100%);
   font-size: 10px;
 }
 
@@ -78,7 +80,7 @@ input.error {
 input[type="submit"] {
   margin: 2rem auto;
   width: 200px;
-  background: linear-gradient(to right, var(--green), var(--blue));
+  background: linear-gradient(to right, var(--pink), var(--read));
   cursor: pointer;
   font-weight: 600;
   transition: transform 0.1s ease-in-out;
@@ -113,7 +115,7 @@ input[type="submit"]:active {
   border: 3px solid;
   border-image-slice: 1;
   border-width: 3px;
-  border-image-source: linear-gradient(to left, var(--green), var(--blue));
+  border-image-source: linear-gradient(to left, var(--pink), var(--read));
 }
 
 .modal .modal-title {
