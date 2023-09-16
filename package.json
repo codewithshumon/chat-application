@@ -7,8 +7,10 @@
     "envstg": "SET \"NODE_ENV=staging\" && nodemon index",
     "envpdc": "SET \"NODE_ENV=production\" && nodemon index",
     "note-for-env": "SET NODE_ENV=production & node index directly use it in terminal both exam is working",
-    "start": "NODE_ENV=development nodemon app",
-    "prod": "NODE_ENV=production node app"
+    "start": "NODE_ENV=development & nodemon app",
+    "prod": "NODE_ENV=production & node app",
+    "startnode": "NODE_ENV=development nodemon app",
+    "prodnode": "NODE_ENV=production node app"
   },
   "repository": {
     "type": "git",
@@ -29,7 +31,7 @@
     "express-validator": "^7.0.1",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.5.1",
+    "mongoose": "^7.5.2",
     "multer": "^1.4.5-lts.1",
     "prettier": "^3.0.3"
   }

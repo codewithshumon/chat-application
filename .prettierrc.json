@@ -1,7 +1,20 @@
 {
-  "quoteProps": "as-needed",
-  "semi": true,
-  "printWidth": 100,
-  "tabWidth": 4,
-  "parser": "babel"
+    "semi": true,
+    "quoteProps": "as-needed",
+    "printWidth": 100,
+    "tabWidth": 4,
+    "overrides": [
+        {
+            "files": "*.ejs",
+            "options": {
+                "parser": "html"
+            }
+        },
+        {
+            "files": "*.json",
+            "options": {
+                "parser": "json"
+            }
+        }
+    ]
 }
