@@ -2,7 +2,7 @@
 const { check, validationResult } = require("express-validator");
 const createError = require("http-errors");
 const path = require("path");
-const { unlink } = require("fs");
+const fs = require("fs");
 //External imports
 const User = require("../../models/People");
 
@@ -35,10 +35,9 @@ const addUserValidator = [
             strictMode: true,
         })
         .withMessage("Must be a valid Bangladeshi mobile number")
-        .trim()
         .custom(async (value) => {
             try {
-                const user = await User.findOne({ email: value });
+                const user = await User.findOne({ mobile: value });
                 if (user) {
                     // this error don't direct to express err middleware.Its direct to next mid
                     throw createError("Mobile number is already used!");
@@ -56,9 +55,9 @@ const addUserValidator = [
 ];
 
 const addUserValidatorHandler = (req, res, next) => {
-    const error = validationResult(req);
+    const errors = validationResult(req);
 
-    const mappedError = error.mapped();
+    const mappedError = errors.mapped();
     /*mappedError = {
         name: {
             msg: "Name is required"
@@ -67,23 +66,24 @@ const addUserValidatorHandler = (req, res, next) => {
             msg: "Invalid email address"
         },
     }*/
-    //here Object means mappedError and keys means name, email and more
+    //here Object means mappedError and keys means name, email, and more
     if (Object.keys(mappedError).length === 0) {
         next();
     } else {
         //if file upload but validation failed then remove the file. file should be in req.file
         if (req.files.length > 0) {
             //if file uploaded there would be only one file
-            const fileName = req.files[0];
-            unlink(path.join(__dirname, `/../public/uploads/${fileName}`), (err) => {
+            const { filename } = req.files[0]; // Corrected this line
+            fs.unlink(path.join(__dirname, `../../public/uploads/avatars/${filename}`), (err) => {
                 if (err) {
                     console.log(err);
                 }
             });
         }
         res.status(500).json({
-            error: mappedError,
+            errors: mappedError,
         });
     }
 };
+
 module.exports = { addUserValidator, addUserValidatorHandler };

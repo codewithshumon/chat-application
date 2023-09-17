@@ -8,16 +8,14 @@ function avatarUpload(req, res, next) {
         1000000,
         "Only jpeg, jpg and png files are allowed!",
     );
-    next();
-
     //upload.any() is multer middleware function, if it get and error it ignore all the fn and direct to error handler. It is to use upload file include fields. We need to call function if we get any error in multer then we can still go through and validate other fileds
     upload.any()(req, res, (err) => {
         if (err) {
             //here we making a error object the show the specific avatar fields error
             res.status(500).json({
-                error: {
+                errors: {
                     avatar: {
-                        msg: err.massage,
+                        msg: err.message,
                     },
                 },
             });

@@ -31,7 +31,7 @@ const peopleSchema = mongoose.Schema(
         },
     },
     {
-        timestanps: true,
+        timestamps: true,
     },
 );
 
