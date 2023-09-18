@@ -70,7 +70,7 @@ const addUserValidatorHandler = (req, res, next) => {
     if (Object.keys(mappedError).length === 0) {
         next();
     } else {
-        //if file upload but validation failed then remove the file. file should be in req.file
+        //if file upload but validation failed, remove avatar file. file should be in req.file
         if (req.files.length > 0) {
             //if file uploaded there would be only one file
             const { filename } = req.files[0]; // Corrected this line

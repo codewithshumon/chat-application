@@ -9,11 +9,12 @@ const {
     addUserValidator,
     addUserValidatorHandler,
 } = require("../middlewares/users/userValidators");
+const checkLogin = require("../middlewares/common/checkLogin");
 
 const router = express.Router();
 
 //user page router
-router.get("/", decoHtmlRes("Users"), getUser);
+router.get("/", decoHtmlRes("Users"), checkLogin, getUser);
 
 //create user, here using multer validate file and form fields data. and we can only parse these data only by multer. if we put validation after multer middleware then we can't parse multer data. so we need to put validation middleware after multer
 router.post("/", avatarUpload, addUserValidator, addUserValidatorHandler, addUser);
