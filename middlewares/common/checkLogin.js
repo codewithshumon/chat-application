@@ -49,4 +49,18 @@ const checkLogin = (req, res, next) => {
     }
 };
 
-module.exports = checkLogin;
+//redirect middlerware for if user already login then redirect from index to inbox
+const redirectLoggedIn = (req, res, next) => {
+    //cookie info stay in req.signedCookies
+    let cookies = Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
+    console.log("cookies redicrect", cookies);
+
+    //if cookie found that means user loggedIn so redirect to inbox
+    if (!cookies) {
+        next();
+    } else {
+        res.redirect("/inbox");
+    }
+};
+
+module.exports = { checkLogin, redirectLoggedIn };
