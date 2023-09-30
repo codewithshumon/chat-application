@@ -23,7 +23,7 @@ const loginValidatorHandler = (req, res, next) => {
         next();
     } else {
         //if file upload but validation failed then remove the file. file should be in req.file
-        res.render("index", {
+        res.render("inbox", {
             data: {
                 username: req.body.username,
             },

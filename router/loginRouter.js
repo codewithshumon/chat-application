@@ -6,7 +6,6 @@ const { getLogin, login, logout } = require("../controller/loginController");
 const decoHtmlRes = require("../middlewares/common/decoHtmlRes");
 const { loginValidator, loginValidatorHandler } = require("../middlewares/login/loginValidators");
 const { redirectLoggedIn } = require("../middlewares/common/checkLogin");
-console.log("redirectLoggedIn", redirectLoggedIn);
 
 const router = express.Router();
 

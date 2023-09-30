@@ -26,10 +26,12 @@ async function login(req, res, next) {
             if (isValidPassword) {
                 //prepaering user object to generate token
                 const userObject = {
+                    userid: user._id,
                     username: user.name,
                     email: user.email,
                     mobile: user.mobile,
-                    role: user.role,
+                    avatar: user.avatar || null,
+                    role: user.role || "user",
                 };
 
                 //generating token using jwt
@@ -47,7 +49,7 @@ async function login(req, res, next) {
                 //setting locals for user objects. So we can use these info in html/client side
                 //setting blank loggedInUser in middlewares/common/decoHtmlRes.js
                 res.locals.loggedInUser = userObject;
-                res.render("inbox");
+                res.redirect("inbox");
             } else {
                 throw createErroor("Login failed! Please try again");
             }
