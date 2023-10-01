@@ -9,7 +9,7 @@
       <div id="conversation-list">
         <% data.forEach(function(conversation) { %>
           <!-- conversation creator is same to logged in user, so we need to show participant name and avatar -->
-          <% if(conversation.creator.id === loggedInUser.userid) { %>
+          <% if(conversation.creator.id == loggedInUser.userid) { %>
             <div class="conversation" onclick="getMessages('<%= conversation._id %>', '<%= conversation.participant.name %>')">
               <% if (conversation.participant.avatar) { %>
               <img src="./uploads/avatars/<%= conversation.participant.avatar %>" alt="<%= conversation.participant.name %>" />
@@ -65,7 +65,11 @@
 
 
     <!-- import socket.io cdn -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.0/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+
+    <!-- Include Moment.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
 
       
     <script>
@@ -81,7 +85,8 @@
       // socket initialization
       const socket = io('<%= process.env.APP_URL %>');
       console.log('Socket connection established:', socket.connected);
-
+      console.log('APP_URL:', '<%= process.env.APP_URL %>');
+      
 
       // handle new/live incoming message from socket
       socket.on("new_message", data => {

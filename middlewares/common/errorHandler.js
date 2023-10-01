@@ -5,8 +5,9 @@ function notFoundError(req, res, next) {
     next(createError(404, "Your requested page not found!"));
 }
 
+// default error handler
 function errorhandler(err, req, res, next) {
-    res.locals.error = process.env.NODE_ENV === "development" ? err : { Message: err.message };
+    res.locals.error = process.env.NODE_ENV === "development" ? err : { message: err.message };
 
     res.status(res.status | 500);
 

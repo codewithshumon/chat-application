@@ -6,6 +6,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const moment = require("moment");
 const http = require("http");
+const socketIo = require("socket.io");
 
 //Internal imports
 const { errorhandler, notFoundError } = require("./middlewares/common/errorHandler");
@@ -15,14 +16,25 @@ const inboxRouter = require("./router/inboxRouter");
 
 const app = express();
 const server = http.createServer(app);
+//socket.io setting. Here io is a clent io
+const io = socketIo(server);
+app.set("io", io);
+//global.io here global is server global objeect. we can use io using global.io
+//global.io = io;
+
+//checking for socket.io is connected or disconnectd
+io.on("connection", (socket) => {
+    console.log("A user connected");
+
+    // Handle messages, events, and broadcasting here
+
+    socket.on("disconnect", () => {
+        console.log("A user disconnected");
+    });
+});
 
 //.env file config
 dotenv.config();
-
-//socket.io setting. Here io is a clent io
-const io = require("socket.io")(server);
-//global.io here global is server global objeect. we can use io using global.io
-global.io = io;
 
 // set moment as app locals
 app.locals.moment = moment;
@@ -59,6 +71,6 @@ app.use(notFoundError);
 //common error handling
 app.use(errorhandler);
 
-app.listen(process.env.PORT, (err) => {
+app.listen(process.env.PORT, () => {
     console.log(`App starting to port ${process.env.PORT}`);
 });

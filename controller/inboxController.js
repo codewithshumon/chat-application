@@ -157,7 +157,9 @@ async function sendMessage(req, res, next) {
 
             // emit socket event
             //sending event by emit and 2nd paramier is data insted fo callback
-            global.io.emit("new_message", {
+            //if I don't use globla key global.io.emit("new_message", {...})
+            const io = req.app.get("io");
+            io.emit("new_message", {
                 message: {
                     conversation_id: req.body.conversationId,
                     sender: {

@@ -1,6 +1,8 @@
 //external imports
 const jwt = require("jsonwebtoken");
+const createError = require("http-errors");
 
+//checking if user already logged in
 const checkLogin = (req, res, next) => {
     //cookie info stay in req.signedCookies
     let cookies = Object.keys(req.signedCookies).length > 0 ? req.signedCookies : null;
@@ -13,6 +15,7 @@ const checkLogin = (req, res, next) => {
             //here we got user info from the jwt
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+            //we've setup this user in jwt token from loginController
             //setting all user info in req.user so we can use it in next middleware
             req.user = decoded;
 
@@ -63,4 +66,25 @@ const redirectLoggedIn = (req, res, next) => {
     }
 };
 
-module.exports = { checkLogin, redirectLoggedIn };
+// guard to protect routes that need role based authorization
+const requireRole = (role) => {
+    return function (req, res, next) {
+        //we get req.user.role form checkLogin middle "req.user = decoded"
+        if (req.user.role && role.includes(req.user.role)) {
+            next();
+        } else {
+            if (res.locals.html) {
+                next(createError(401, "You are not authorized to access this page!"));
+            } else {
+                res.status(401).json({
+                    errors: {
+                        common: {
+                            msg: "You are not authorized!",
+                        },
+                    },
+                });
+            }
+        }
+    };
+};
+module.exports = { checkLogin, redirectLoggedIn, requireRole };

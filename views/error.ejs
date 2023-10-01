@@ -1,14 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= title %></title>
-  </head>
-  <body>
-    <h1>This is a error page</h1>
-    <h3> <%= error.message %></h3>
-    <h3> <%= error.status %></h3>
-    <h3> <%= error.stack %></h3>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+    </head>
+    <body>
+        <h3><%= error.message %></h3>
+        <h3><%= error.status %></h3>
+        <h3><%= error.stack %></h3>
+    </body>
 </html>
