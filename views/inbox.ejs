@@ -65,7 +65,7 @@
 
 
     <!-- import socket.io cdn -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="/socket.io/socket.io.min.js"></script>
 
     <!-- Include Moment.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
@@ -84,13 +84,10 @@
 
       // socket initialization
       const socket = io('<%= process.env.APP_URL %>');
-      console.log('Socket connection established:', socket.connected);
-      console.log('APP_URL:', '<%= process.env.APP_URL %>');
       
 
       // handle new/live incoming message from socket
       socket.on("new_message", data => {
-        console.log(data);
         // only respond if current conversation is open in any client
         if(data.message.conversation_id == current_conversation_id) {
           // message class

@@ -5,8 +5,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const moment = require("moment");
-const http = require("http");
-const socketIo = require("socket.io");
+//const http = require("http");
 
 //Internal imports
 const { errorhandler, notFoundError } = require("./middlewares/common/errorHandler");
@@ -14,27 +13,24 @@ const loginRouter = require("./router/loginRouter");
 const usersRouter = require("./router/usersRouter");
 const inboxRouter = require("./router/inboxRouter");
 
-const app = express();
-const server = http.createServer(app);
-//socket.io setting. Here io is a clent io
-const io = socketIo(server);
-app.set("io", io);
-//global.io here global is server global objeect. we can use io using global.io
-//global.io = io;
+//.env file config
+dotenv.config();
 
-//checking for socket.io is connected or disconnectd
+const PORT = process.env.PORT;
+const app = express();
+const server = app.listen(PORT, () => {
+    console.log(`Started at ${PORT}`);
+});
+const io = require("socket.io")(server);
+global.io = io;
+
 io.on("connection", (socket) => {
     console.log("A user connected");
 
-    // Handle messages, events, and broadcasting here
-
     socket.on("disconnect", () => {
-        console.log("A user disconnected");
+        console.log("User disconnected");
     });
 });
-
-//.env file config
-dotenv.config();
 
 // set moment as app locals
 app.locals.moment = moment;
@@ -70,7 +66,3 @@ app.use(notFoundError);
 
 //common error handling
 app.use(errorhandler);
-
-app.listen(process.env.PORT, () => {
-    console.log(`App starting to port ${process.env.PORT}`);
-});
