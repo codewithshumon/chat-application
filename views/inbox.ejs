@@ -175,11 +175,11 @@
                   attachments += '</div>';
 
                   // final message html
-                  let messageHTML = `<div class="message-row ${messageClass}"><div class="message-content">
+                  let messageHTML = `<div id="${current_conversation_id}" class="message-row ${messageClass}"><div class="message-content">
                       ${showAvatar}
-                      <div class="message-text">${message.text}</div>
+                      <div id="${current_conversation_id}" class="message-text">${message.text}</div>
                       ${attachments}
-                      <div class="message-time">${moment(message.date_time).fromNow()}</div>
+                      <div id="${current_conversation_id}" class="message-time">${moment(message.date_time).fromNow()}</div>
                     </div></div>`;
 
                   allMessages += messageHTML;
@@ -253,6 +253,7 @@
               });
 
               console.log(conIdElement);
+              location.reload()
             
                 // Optionally, you can remove the conversation from the UI here
                 // and update the conversation list.
