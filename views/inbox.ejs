@@ -6,28 +6,30 @@
         <input type="text" placeholder="Search" />
       </div>
 
+      <% let conversationID %>
       <div id="conversation-list">
         <% data.forEach(function(conversation) { %>
+          <% conversationID = conversation._id %>
           <!-- conversation creator is same to logged in user, so we need to show participant name and avatar -->
           <% if(conversation.creator.id == loggedInUser.userid) { %>
-            <div class="conversation" onclick="getMessages('<%= conversation._id %>', '<%= conversation.participant.name %>')">
+            <div id="<%= conversation._id %>" class="conversation" onclick="getMessages('<%= conversation._id %>', '<%= conversation.participant.name %>')">
               <% if (conversation.participant.avatar) { %>
               <img src="./uploads/avatars/<%= conversation.participant.avatar %>" alt="<%= conversation.participant.name %>" />
               <% } else { %>
                 <img src="./images/nophoto.png" />
               <% } %>
-              <div class="title-text"><%= conversation.participant.name %></div>
-              <div class="conversation-date"><%= moment(conversation.last_updated).fromNow() %></div>
+              <div id="<%= conversation._id %>" class="title-text"><%= conversation.participant.name %></div>
+              <div id="<%= conversation._id %>" class="conversation-date"><%= moment(conversation.last_updated).fromNow() %></div>
             </div>
             <% } else { %>
-            <div class="conversation" onclick="getMessages('<%= conversation._id %>', '<%= conversation.creator.name %>')">
+            <div id="<%= conversation._id %>" class="conversation" onclick="getMessages('<%= conversation._id %>', '<%= conversation.creator.name %>')">
               <% if (conversation.creator.avatar) { %>
               <img src="./uploads/avatars/<%= conversation.creator.avatar %>" alt="<%= conversation.creator.name %>" />
               <% } else { %>
                 <img src="./images/nophoto.png" />
               <% } %>
-              <div class="title-text"><%= conversation.creator.name %></div>
-              <div class="conversation-date"><%= moment(conversation.last_updated).fromNow() %></div>
+              <div id="<%= conversation._id %>" class="title-text"><%= conversation.creator.name %></div>
+              <div id="<%= conversation._id %>" class="conversation-date"><%= moment(conversation.last_updated).fromNow() %></div>
             </div>
           <% } %>
         <% }); %>
@@ -43,7 +45,7 @@
         <a href="#">+</a>
       </div>
 
-      <div id="chat-title">
+      <div id="chat-title" onclick="deleteConversation('<%= conversationID%>')">
         <span id="conversation-partner"></span>
         <img src="./images/trash.png" alt="Delete Conversation" />
       </div>
@@ -110,18 +112,18 @@
 
           // do not show avatar for loggedin user
           if(data.message.sender.id == loggedinUserId) {
-            messageHTML = `<div class="message-row ${messageClass}"><div class="message-content">
-              <div class="message-text">${data.message.message}</div>
+            messageHTML = `<div id="${current_conversation_id}" class="message-row ${messageClass}"><div id="${current_conversation_id}" class="message-content">
+              <div id="${current_conversation_id}" class="message-text">${data.message.message}</div>
               ${attachments}
-              <div class="message-time">${moment(data.message.date_time).fromNow()}</div>
-            </div></div>`;
+              <div id="${current_conversation_id}" class="message-time">${moment(data.message.date_time).fromNow()}</div>
+            </div id="${current_conversation_id}"></div>`;
           } else {
-            messageHTML = `<div class="message-row ${messageClass}"><div class="message-content">
+            messageHTML = `<div id="${current_conversation_id}" class="message-row ${messageClass}"><div id="${current_conversation_id}" class="message-content">
               ${senderAvatar}
-              <div class="message-text">${data.message.message}</div>
+              <div id="${current_conversation_id}" class="message-text">${data.message.message}</div>
               ${attachments}
-              <div class="message-time">${moment(data.message.date_time).fromNow()}</div>
-            </div></div>`;
+              <div id="${current_conversation_id}" class="message-time">${moment(data.message.date_time).fromNow()}</div>
+            </div id="${current_conversation_id}"></div>`;
           }
 
           // append the inoming message to message area as last item
@@ -141,6 +143,7 @@
         let response = await fetch(`/inbox/messages/${conversation_id}`);
         const result= await response.json();
 
+        current_conversation_id = conversation_id;
 
         if(!result.errors && result.data) {
             form.style.visibility = 'visible';
@@ -225,6 +228,47 @@
         }
       }
       
+
+    // Function to delete a conversation and messages
+    async function deleteConversation(conversationId) {
+        try {
+            const response = await fetch(`/inbox/${conversationId}`, {
+                method: "DELETE",
+            });
+
+            const result = await response.json();
+
+            if (response.status === 200) {
+                // Handle success - Display a success message
+                const successToast = Toastify({
+                    text: "Conversation and associated messages were removed successfully!",
+                    duration: 3000,
+                });
+                successToast.showToast();
+
+              // Remove all elements with the specified ID
+              const conIdElement = document.querySelectorAll(`[id="${conversationId}"]`);
+                  conIdElement.forEach((element) => {
+                  element.remove();
+              });
+
+              console.log(conIdElement);
+            
+                // Optionally, you can remove the conversation from the UI here
+                // and update the conversation list.
+            } else {
+                // Handle error - Display an error message
+                const errorToast = Toastify({
+                    text: "Could not delete the conversation and associated messages!",
+                    duration: 3000,
+                });
+                errorToast.showToast();
+            }
+        } catch (error) {
+            // Handle any unexpected errors
+            console.error(error);
+        }
+    }
     </script>
   </body>
 </html>

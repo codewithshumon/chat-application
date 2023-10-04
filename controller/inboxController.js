@@ -195,10 +195,41 @@ async function sendMessage(req, res, next) {
     }
 }
 
+// Remove a conversation and its messages by ID
+async function removeConAndMsg(req, res, next) {
+    try {
+        const conversationId = req.params.id;
+
+        // Check if there are any messages associated with the conversation
+        const messagesExist = await Message.find({ conversation_id: conversationId });
+
+        if (messagesExist.length > 0) {
+            // Delete all messages associated with the conversation
+            await Message.deleteMany({ conversation_id: conversationId });
+        }
+
+        // Delete the conversation itself
+        await Conversation.findByIdAndDelete(conversationId);
+
+        res.status(200).json({
+            message: "Conversation and associated messages were removed successfully!",
+        });
+    } catch (err) {
+        res.status(500).json({
+            errors: {
+                common: {
+                    msg: "Could not delete the conversation and associated messages!",
+                },
+            },
+        });
+    }
+}
+
 module.exports = {
     getInbox,
     searchUser,
     addConversation,
     getMessages,
     sendMessage,
+    removeConAndMsg,
 };
